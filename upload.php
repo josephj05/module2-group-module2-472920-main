@@ -79,6 +79,5 @@ function handle_file_delete($log_file) {
         echo "File does not exist.<br>";
     }
 
-    display_logout_button();
 } 
 ?>
