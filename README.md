@@ -4,7 +4,7 @@
 http://ec2-3-20-203-119.us-east-2.compute.amazonaws.com/~zihozoseph03/login.html
 
 Creative Portion:
-- The design of Welcome "name" is added as you enter
+- The design of Welcome "name" is added as you upload
 - Deletion of the image is only determined by the owner of the uploader
 
 JOSEPHJANG-472920-JOSEPHJ05
