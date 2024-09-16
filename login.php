@@ -9,7 +9,7 @@ session_start();
 // Handle logout
 if (isset($_POST['logout'])) {
     session_destroy();  // Destroy the session
-    header('Location: login.php');  // Redirect back to login page
+    header('Location: login.html');  // Redirect back to login page
     exit();  // Stop further script execution
 }
 
