@@ -1,3 +1,11 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+</head>
+<body>
+
 <?php
 // Include necessary files
 require_once 'auth.php';
@@ -51,3 +59,6 @@ if (isset($_SESSION['logged_in_user'])) {
 }
 
 ?>
+
+</body>
+</html>
