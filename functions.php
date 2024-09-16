@@ -36,25 +36,34 @@ function get_last_login($file, $username) {
     return null;
 }
 
-// Function to show all shared files uploaded by any user
 function show_shared_files($log_file) {
     if (file_exists($log_file)) {
+        // Read the log file to get uploaded files and their owners
         $uploads = file($log_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         $shared_files = array();
 
-        // Collect all files from the log file
+        // Collect all files from the log
         foreach ($uploads as $upload) {
             list($logged_user, $file_path) = explode('|', $upload);
             $shared_files[] = array('user' => $logged_user, 'file' => $file_path);
         }
 
-        // Display all shared files
+        // Display the list of shared files with uploader info and delete button for the uploader
         if (!empty($shared_files)) {
             echo "<h3>Shared Files:</h3><ul>";
             foreach ($shared_files as $shared_file) {
                 echo "<li>";
-                echo "<a href='" . $shared_file['file'] . "'>" . basename($shared_file['file']) . "</a> ";
+                echo "<a href='" . $shared_file['file'] . "' download>" . basename($shared_file['file']) . "</a> ";
                 echo "<em>Uploaded by: " . htmlspecialchars($shared_file['user']) . "</em>";
+
+                // If the current user is the uploader, display a delete button
+                if ($shared_file['user'] === $_SESSION['logged_in_user']) {
+                    echo "<form action='login.php' method='post' style='display:inline;'>
+                            <input type='hidden' name='file_to_delete' value='" . $shared_file['file'] . "'>
+                            <input type='submit' name='delete' value='Delete'>
+                          </form>";
+                }
+
                 echo "</li>";
             }
             echo "</ul>";
@@ -65,6 +74,7 @@ function show_shared_files($log_file) {
         echo "No files have been uploaded yet.<br>";
     }
 }
+
 
 // Function to display the upload form
 function display_upload_form() {
