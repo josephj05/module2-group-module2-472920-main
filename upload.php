@@ -72,13 +72,13 @@ function handle_file_delete($log_file) {
 
         echo "File has been deleted.<br>";
         
-        // Provide a link to go back to the shared files page
-        echo '<a href="shared_files.php">Go back to shared files</a>';
-
+        // Option 1: Provide a link to go back to the shared files page
+        echo '<a href="login.php">Go back to shared files</a>';
+ 
     } else {
         echo "File does not exist.<br>";
     }
 
     display_logout_button();
-}
+} 
 ?>
