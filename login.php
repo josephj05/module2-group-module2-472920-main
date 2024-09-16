@@ -2,6 +2,7 @@
 // Path to the user.txt file outside public_html
 $file = '../data/user.txt';
 $log_file = '../data/upload_log.txt';  // Log file to store uploads
+$login_dates_file = '../data/last_login.txt'; // File to store last login dates
 
 // Start the session to keep track of the logged-in user
 session_start();
@@ -28,7 +29,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (in_array($username, $users)) {
             // Save the username in session for file upload handling
             $_SESSION['logged_in_user'] = $username;
+
+            // Log the current time as the last login date
+            log_last_login($login_dates_file, $username);
+
+            // Get and display the last login date
+            $last_login = get_last_login($login_dates_file, $username);
             echo "Welcome, " . htmlspecialchars($username) . "! You are now logged in.<br>";
+            if ($last_login) {
+                echo "Your last login was on: " . htmlspecialchars($last_login) . "<br>";
+            }
 
             // Display the file upload form
             echo '
@@ -174,4 +184,51 @@ function show_user_files($log_file, $username) {
         }
     }
 }
+
+// Function to log the last login date for a user
+function log_last_login($file, $username) {
+    $current_time = date("Y-m-d H:i:s"); // Debugging: print current time
+    echo "Current time for logging: " . $current_time . "<br>";
+
+    $logins = file_exists($file) ? file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) : array();
+
+    // Update or append the last login time for the user
+    $updated_logins = array();
+    $user_found = false;
+    foreach ($logins as $login) {
+        list($logged_user, $login_time) = explode('|', $login);
+        if ($logged_user === $username) {
+            $updated_logins[] = $username . '|' . $current_time;
+            $user_found = true;
+        } else {
+            $updated_logins[] = $login;
+        }
+    }
+    if (!$user_found) {
+        $updated_logins[] = $username . '|' . $current_time;
+    }
+
+    // Debugging: Check if we are writing to the file correctly
+    file_put_contents($file, implode("\n", $updated_logins) . "\n");
+    echo "Logged in successfully, last login time recorded.<br>";
+}
+
+// Function to get the last login date for a user
+function get_last_login($file, $username) {
+    echo "Retrieving last login time...<br>"; // Debugging
+
+    if (file_exists($file)) {
+        $logins = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        foreach ($logins as $login) {
+            list($logged_user, $login_time) = explode('|', $login);
+            if ($logged_user === $username) {
+                echo "Last login time found: " . $login_time . "<br>"; // Debugging
+                return $login_time;
+            }
+        }
+    }
+    echo "No last login time found.<br>"; // Debugging
+    return null;
+}
+
 ?>
