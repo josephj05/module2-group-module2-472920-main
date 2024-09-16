@@ -36,33 +36,33 @@ function get_last_login($file, $username) {
     return null;
 }
 
-// Function to show uploaded files for the logged-in user with delete buttons
-function show_user_files($log_file, $username) {
+// Function to show all shared files uploaded by any user
+function show_shared_files($log_file) {
     if (file_exists($log_file)) {
         $uploads = file($log_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        $user_files = array();
+        $shared_files = array();
 
+        // Collect all files from the log file
         foreach ($uploads as $upload) {
             list($logged_user, $file_path) = explode('|', $upload);
-            if ($logged_user === $username) {
-                $user_files[] = $file_path;
-            }
+            $shared_files[] = array('user' => $logged_user, 'file' => $file_path);
         }
 
-        if (!empty($user_files)) {
-            echo "<h3>Your Uploaded Files:</h3><ul>";
-            foreach ($user_files as $file) {
-                echo "<li><a href='$file'>" . basename($file) . "</a> ";
-                echo "<form action='login.php' method='post' style='display:inline;'>
-                          <input type='hidden' name='file_to_delete' value='$file'>
-                          <input type='submit' name='delete' value='Delete'>
-                      </form>";
+        // Display all shared files
+        if (!empty($shared_files)) {
+            echo "<h3>Shared Files:</h3><ul>";
+            foreach ($shared_files as $shared_file) {
+                echo "<li>";
+                echo "<a href='" . $shared_file['file'] . "'>" . basename($shared_file['file']) . "</a> ";
+                echo "<em>Uploaded by: " . htmlspecialchars($shared_file['user']) . "</em>";
                 echo "</li>";
             }
             echo "</ul>";
         } else {
-            echo "You have not uploaded any files yet.<br>";
+            echo "No files have been shared yet.<br>";
         }
+    } else {
+        echo "No files have been uploaded yet.<br>";
     }
 }
 
