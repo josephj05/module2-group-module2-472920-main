@@ -1,7 +1,3 @@
-Share
-
-
-You said:
 <?php
 // Path to the user.txt file outside public_html
 $file = '../data/user.txt';
