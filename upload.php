@@ -71,7 +71,10 @@ function handle_file_delete($log_file) {
         file_put_contents($log_file, implode("\n", $updated_log) . "\n");
 
         echo "File has been deleted.<br>";
-        show_user_files($log_file, $_SESSION['logged_in_user']);
+        
+        // Provide a link to go back to the shared files page
+        echo '<a href="shared_files.php">Go back to shared files</a>';
+
     } else {
         echo "File does not exist.<br>";
     }
