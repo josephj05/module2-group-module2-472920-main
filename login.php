@@ -14,15 +14,15 @@ if (isset($_POST['logout'])) {
 // Handle POST requests
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['username'])) {
-        handle_login($file, $login_dates_file, $log_file);
+        handle_login($file, $login_dates_file, $log_file);  // Login logic
     }
 
     if (isset($_POST['upload']) && isset($_FILES['fileToUpload'])) {
-        handle_file_upload($log_file);
+        handle_file_upload($log_file);  // File upload logic
     }
 
     if (isset($_POST['delete']) && isset($_POST['file_to_delete'])) {
-        handle_file_delete($log_file);
+        handle_file_delete($log_file);  // File deletion logic
     }
 } else {
     // Show shared files for logged-in users
@@ -30,4 +30,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         show_shared_files($log_file);  // Display the shared files to all users
     }
 }
+
+// Ensure the logout button is always displayed when the user is logged in
+if (isset($_SESSION['logged_in_user'])) {
+    echo '<h2>Welcome, ' . htmlspecialchars($_SESSION['logged_in_user']) . '!</h2>';
+
+    // Display the logout button
+    echo '<form action="login.php" method="post">
+              <input type="submit" name="logout" value="Logout">
+          </form>';
+} else {
+    // If the user is not logged in, show the login form
+    echo '<h2>Login</h2>';
+    echo '<form action="login.php" method="post">
+              <label for="username">Username:</label>
+              <input type="text" id="username" name="username" required>
+              <br><br>
+              <input type="submit" value="Login">
+          </form>';
+}
+
 ?>
